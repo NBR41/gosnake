@@ -5,12 +5,13 @@ import (
 	"time"
 
 	"github.com/NBR41/gosnake/assets"
+	"github.com/NBR41/gosnake/engine"
 	"github.com/hajimehoshi/ebiten"
 )
 
 type gameState int
 
-type fView func(gameState, *Data) (*ebiten.Image, error)
+type fView func(gameState, *engine.Data) (*ebiten.Image, error)
 
 const (
 	GameLoading gameState = iota
@@ -22,7 +23,7 @@ const (
 type Game struct {
 	state    gameState
 	rand     *rand.Rand
-	data     *Data
+	data     *engine.Data
 	skinView fView
 	gridView fView
 	audio    *Audio

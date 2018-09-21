@@ -3,6 +3,7 @@ package gosnake
 import (
 	"image/color"
 
+	"github.com/NBR41/gosnake/engine"
 	"github.com/golang/freetype/truetype"
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/text"
@@ -29,7 +30,7 @@ func GridView(size, colnb, rownb int, arcadeFont *truetype.Font) (fView, error) 
 		return nil, err
 	}
 
-	return func(state gameState, data *Data) (*ebiten.Image, error) {
+	return func(state gameState, data *engine.Data) (*ebiten.Image, error) {
 		if err := view.Clear(); err != nil {
 			return nil, err
 		}

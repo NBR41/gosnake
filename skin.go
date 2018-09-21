@@ -8,6 +8,7 @@ import (
 	"golang.org/x/image/font"
 
 	//"github.com/NBR41/gosnake/assets"
+	"github.com/NBR41/gosnake/engine"
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/text"
 	//"github.com/skatiyar/pacman/spritetools"
@@ -28,7 +29,7 @@ func SkinView(skin *ebiten.Image, arcadeFont *truetype.Font) (fView, error) {
 		return nil, err
 	}
 
-	return func(state gameState, data *Data) (*ebiten.Image, error) {
+	return func(state gameState, data *engine.Data) (*ebiten.Image, error) {
 		if err := view.Clear(); err != nil {
 			return nil, err
 		}
@@ -43,7 +44,7 @@ func SkinView(skin *ebiten.Image, arcadeFont *truetype.Font) (fView, error) {
 			fallthrough
 		case GameOver:
 			if data != nil {
-				score := data.score
+				score := data.Score
 				if score > MaxScoreView {
 					score = MaxScoreView
 				}

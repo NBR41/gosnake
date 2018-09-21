@@ -2,7 +2,7 @@ package engine
 
 //Data struct for game data
 type Data struct {
-	score int
+	Score int
 	snake *Snake
 	grid  *Grid
 	fruit *Position
@@ -10,7 +10,7 @@ type Data struct {
 
 func newData(colnb, rownb int) *Data {
 	return &Data{
-		score: 0,
+		Score: 0,
 		snake: newSnake(rownb),
 		grid:  newGrid(colnb, rownb),
 	}
@@ -19,7 +19,7 @@ func newData(colnb, rownb int) *Data {
 //SetFruit set fruit position on the grid
 func (d *Data) SetFruit() error {
 	var err error
-	d.fruit, err = d.grid.GetFreePosition(d.snake.body)
+	d.fruit, err = d.grid.getFreePosition(d.snake.body)
 	return err
 }
 
@@ -40,10 +40,16 @@ func (d *Data) MoveEast() error {
 }
 
 func (d *Data) move(dir Direction) error {
-	segs, err := d.grid.Move(dir, d.snake.body)
+	head := *d.snake.body[0].start
+	next := d.grid.getNextPosition(dir, &head)
+	chomp := equalPosition(next, d.fruit)
+	segs, err := d.grid.move(dir, d.snake.body, next, chomp)
 	if err != nil {
 		return err
 	}
+	if chomp {
+		d.Score += 10
+	}
 	d.snake.body = segs
-	return nil
+	return d.SetFruit()
 }

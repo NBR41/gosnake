@@ -10,7 +10,7 @@ import (
 
 func TestGetFreePosition1(t *testing.T) {
 	g := newGrid(3, 3)
-	p, err := g.GetFreePosition(
+	p, err := g.getFreePosition(
 		[]*Segment{
 			newSegment(East, newPosition(0, 1), newPosition(2, 1)),
 			newSegment(West, newPosition(2, 0), newPosition(1, 0)),
@@ -29,7 +29,7 @@ func TestGetFreePosition1(t *testing.T) {
 
 func TestGetFreePosition2(t *testing.T) {
 	g := newGrid(3, 3)
-	p, err := g.GetFreePosition(
+	p, err := g.getFreePosition(
 		[]*Segment{
 			newSegment(South, newPosition(1, 0), newPosition(1, 2)),
 			newSegment(North, newPosition(2, 2), newPosition(2, 1)),
@@ -48,7 +48,7 @@ func TestGetFreePosition2(t *testing.T) {
 
 func TestGetFreePosition3(t *testing.T) {
 	g := newGrid(2, 2)
-	_, err := g.GetFreePosition(
+	_, err := g.getFreePosition(
 		[]*Segment{
 			newSegment(West, newPosition(0, 0), newPosition(1, 0)),
 			newSegment(East, newPosition(1, 1), newPosition(0, 1)),
@@ -65,7 +65,7 @@ func TestGetFreePosition3(t *testing.T) {
 
 func TestIsFreePosition(t *testing.T) {
 	g := newGrid(2, 2)
-	v := g.IsFreePosition(
+	v := g.isFreePosition(
 		newPosition(0, 0),
 		[]*Segment{
 			newSegment(West, newPosition(0, 0), newPosition(1, 0)),
@@ -75,7 +75,7 @@ func TestIsFreePosition(t *testing.T) {
 	if v {
 		t.Errorf("unexpected value")
 	}
-	v = g.IsFreePosition(
+	v = g.isFreePosition(
 		newPosition(0, 0),
 		[]*Segment{
 			newSegment(West, newPosition(1, 0), newPosition(1, 0)),
@@ -85,7 +85,7 @@ func TestIsFreePosition(t *testing.T) {
 	if !v {
 		t.Errorf("unexpected value")
 	}
-	v = g.IsFreePosition(
+	v = g.isFreePosition(
 		newPosition(0, 1),
 		[]*Segment{
 			newSegment(West, newPosition(1, 0), newPosition(1, 0)),
@@ -99,13 +99,15 @@ func TestIsFreePosition(t *testing.T) {
 
 func TestMove1(t *testing.T) {
 	g := newGrid(3, 3)
-	p, err := g.Move(
+	p, err := g.move(
 		East,
 		[]*Segment{
 			newSegment(East, newPosition(0, 1), newPosition(2, 1)),
 			newSegment(West, newPosition(2, 0), newPosition(1, 0)),
 			newSegment(East, newPosition(1, 2), newPosition(2, 2)),
 		},
+		newPosition(1, 1),
+		false,
 	)
 	if err != nil {
 		t.Errorf("unexpected error, %v", err)
@@ -123,13 +125,15 @@ func TestMove1(t *testing.T) {
 
 func TestMove2(t *testing.T) {
 	g := newGrid(3, 3)
-	_, err := g.Move(
+	_, err := g.move(
 		North,
 		[]*Segment{
 			newSegment(East, newPosition(0, 1), newPosition(2, 1)),
 			newSegment(West, newPosition(2, 0), newPosition(1, 0)),
 			newSegment(East, newPosition(1, 2), newPosition(2, 2)),
 		},
+		newPosition(0, 0),
+		false,
 	)
 	if err == nil {
 		t.Error("expecting error")
@@ -142,12 +146,14 @@ func TestMove2(t *testing.T) {
 
 func TestMove3(t *testing.T) {
 	g := newGrid(2, 2)
-	p, err := g.Move(
+	p, err := g.move(
 		South,
 		[]*Segment{
 			newSegment(West, newPosition(0, 0), newPosition(1, 0)),
 			newSegment(North, newPosition(1, 1), newPosition(1, 1)),
 		},
+		newPosition(0, 1),
+		false,
 	)
 	if err != nil {
 		t.Errorf("unexpected error, %v", err)

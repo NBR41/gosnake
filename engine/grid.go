@@ -32,7 +32,7 @@ func newGrid(colnb, rownb int) *Grid {
 }
 
 //GetFreePosition returns a free position on the grid
-func (g *Grid) GetFreePosition(segs []*Segment) (*Position, error) {
+func (g *Grid) getFreePosition(segs []*Segment) (*Position, error) {
 	m := g.getFreePositions(segs)
 	if len(m) > 0 {
 		for i := range m {
@@ -78,7 +78,7 @@ func (g *Grid) filterHorizontalSegment(m map[string]interface{}, seg *Segment) {
 			return
 		}
 
-		pos = g.GetNextPosition(seg.dir, pos)
+		pos = g.getNextPosition(seg.dir, pos)
 	}
 }
 
@@ -90,12 +90,12 @@ func (g *Grid) filterVerticalSegment(m map[string]interface{}, seg *Segment) {
 		if equalPosition(&cur, seg.start) {
 			return
 		}
-		pos = g.GetNextPosition(seg.dir, pos)
+		pos = g.getNextPosition(seg.dir, pos)
 	}
 }
 
 //IsFreePosition returns true if the position is free in the grid
-func (g *Grid) IsFreePosition(p *Position, segs []*Segment) bool {
+func (g *Grid) isFreePosition(p *Position, segs []*Segment) bool {
 	if *p == *segs[len(segs)-1].end {
 		return true
 	}
@@ -105,17 +105,15 @@ func (g *Grid) IsFreePosition(p *Position, segs []*Segment) bool {
 }
 
 //Move returns new list of segments with a move of one
-func (g *Grid) Move(dir Direction, segs []*Segment) ([]*Segment, error) {
-	head := *segs[0].start
-	next := g.GetNextPosition(dir, &head)
-	if !g.IsFreePosition(next, segs) {
+func (g *Grid) move(dir Direction, segs []*Segment, next *Position, movetail bool) ([]*Segment, error) {
+	if !g.isFreePosition(next, segs) {
 		return nil, ErrColision
 	}
-	return g.translate(dir, next, segs), nil
+	return g.translate(dir, segs, next, movetail), nil
 }
 
 //GetNextPosition get next position according to the direction
-func (g *Grid) GetNextPosition(dir Direction, pos *Position) *Position {
+func (g *Grid) getNextPosition(dir Direction, pos *Position) *Position {
 	switch dir {
 	case North:
 		if pos.y == 0 {
@@ -145,7 +143,7 @@ func (g *Grid) GetNextPosition(dir Direction, pos *Position) *Position {
 	return pos
 }
 
-func (g *Grid) translate(dir Direction, next *Position, segs []*Segment) []*Segment {
+func (g *Grid) translate(dir Direction, segs []*Segment, next *Position, chomp bool) []*Segment {
 	// Move Head
 	if dir == segs[0].dir {
 		segs[0].start = next
@@ -154,12 +152,13 @@ func (g *Grid) translate(dir Direction, next *Position, segs []*Segment) []*Segm
 	}
 
 	// Move Tail
-	lastIndex := len(segs) - 1
-	if equalPosition(segs[lastIndex].start, segs[lastIndex].end) {
-		return segs[:lastIndex]
+	if !chomp {
+		lastIndex := len(segs) - 1
+		if equalPosition(segs[lastIndex].start, segs[lastIndex].end) {
+			return segs[:lastIndex]
+		}
+		segs[lastIndex].end = g.getNextPosition(segs[lastIndex].dir, segs[lastIndex].end)
 	}
-
-	segs[lastIndex].end = g.GetNextPosition(segs[lastIndex].dir, segs[lastIndex].end)
 	return segs
 }
 
