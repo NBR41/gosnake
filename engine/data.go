@@ -2,15 +2,17 @@ package engine
 
 //Data struct for game data
 type Data struct {
-	Score int
+	score int
+	dir   Direction
 	snake *Snake
 	grid  *Grid
 	fruit *Position
 }
 
-func newData(colnb, rownb int) *Data {
+func NewData(colnb, rownb int) *Data {
 	return &Data{
-		Score: 0,
+		score: 0,
+		dir:   East,
 		snake: newSnake(rownb),
 		grid:  newGrid(colnb, rownb),
 	}
@@ -21,6 +23,10 @@ func (d *Data) SetFruit() error {
 	var err error
 	d.fruit, err = d.grid.getFreePosition(d.snake.body)
 	return err
+}
+
+func (d *Data) Move() error {
+	return d.move(d.Direction())
 }
 
 func (d *Data) MoveNorth() error {
@@ -39,6 +45,14 @@ func (d *Data) MoveEast() error {
 	return d.move(East)
 }
 
+func (d *Data) Direction() Direction {
+	return d.dir
+}
+
+func (d *Data) Score() int {
+	return d.score
+}
+
 func (d *Data) move(dir Direction) error {
 	head := *d.snake.body[0].start
 	next := d.grid.getNextPosition(dir, &head)
@@ -48,8 +62,9 @@ func (d *Data) move(dir Direction) error {
 		return err
 	}
 	if chomp {
-		d.Score += 10
+		d.score += 10
 	}
 	d.snake.body = segs
+	d.dir = dir
 	return d.SetFruit()
 }

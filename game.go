@@ -24,6 +24,7 @@ type Game struct {
 	state    gameState
 	rand     *rand.Rand
 	data     *engine.Data
+	dir      *engine.Direction
 	skinView fView
 	gridView fView
 	audio    *Audio
@@ -75,15 +76,43 @@ func (g *Game) update(screen *ebiten.Image) error {
 	switch g.state {
 	case GameLoading:
 		if spaceReleased() {
-
+			g.data = engine.NewData(50, 25)
+			if err := g.data.SetFruit(); err != nil {
+				return err
+			}
 			g.audio.players.Beginning.Pause()
 			g.audio.players.Beginning.Rewind()
 			g.state = GameStart
 			break
+		} else {
+			g.data = nil
+			g.audio.players.Beginning.Play()
 		}
-		g.data = nil
-		g.audio.players.Beginning.Play()
 	case GameStart:
+		if spaceReleased() {
+			g.state = GamePause
+		} else {
+			var err error
+			switch {
+			case upKeyPressed():
+				err = g.data.MoveNorth()
+			case downKeyPressed():
+				err = g.data.MoveSouth()
+			case leftKeyPressed():
+				err = g.data.MoveWest()
+			case rightKeyPressed():
+				err = g.data.MoveEast()
+			default:
+				err = g.data.Move()
+			}
+			if err != nil {
+				if err == engine.ErrColision {
+					g.state = GameOver
+				} else {
+					return err
+				}
+			}
+		}
 	case GamePause:
 		if spaceReleased() {
 			g.state = GameStart

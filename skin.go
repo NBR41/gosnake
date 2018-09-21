@@ -44,7 +44,7 @@ func SkinView(skin *ebiten.Image, arcadeFont *truetype.Font) (fView, error) {
 			fallthrough
 		case GameOver:
 			if data != nil {
-				score := data.Score
+				score := data.Score()
 				if score > MaxScoreView {
 					score = MaxScoreView
 				}
