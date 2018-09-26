@@ -60,36 +60,19 @@ func (g *Grid) getGridMap() map[string]interface{} {
 
 func (g *Grid) filterGridMap(m map[string]interface{}, segs []*Segment) {
 	for i := range segs {
-		switch {
-		case segs[i].IsHorizontal(): //horizontal
-			g.filterHorizontalSegment(m, segs[i])
-		default: //vertical
-			g.filterVerticalSegment(m, segs[i])
-		}
+		g.filterSegment(m, segs[i])
 	}
 }
 
-func (g *Grid) filterHorizontalSegment(m map[string]interface{}, seg *Segment) {
-	cur := *seg.end
-	pos := &cur
-	for {
-		delete(m, pos.String())
-		if equalPosition(pos, seg.start) {
-			return
-		}
-
-		pos = g.getNextPosition(seg.dir, pos)
-	}
-}
-
-func (g *Grid) filterVerticalSegment(m map[string]interface{}, seg *Segment) {
+func (g *Grid) filterSegment(m map[string]interface{}, seg *Segment) {
 	cur := *seg.end
 	pos := &cur
 	for {
 		delete(m, cur.String())
-		if equalPosition(&cur, seg.start) {
+		if equalPosition(pos, seg.start) {
 			return
 		}
+
 		pos = g.getNextPosition(seg.dir, pos)
 	}
 }
@@ -160,6 +143,41 @@ func (g *Grid) translate(dir Direction, segs []*Segment, next *Position, chomp b
 		segs[lastIndex].end = g.getNextPosition(segs[lastIndex].dir, segs[lastIndex].end)
 	}
 	return segs
+}
+
+func (g *Grid) getBodyParts(segs []*Segment) []*BodyPart {
+	last := len(segs) - 1
+	ret := []*BodyPart{}
+
+	for i := range segs {
+		pos := *segs[i].end
+		cur := &pos
+	LoopSegment:
+		for {
+			switch {
+			case equalPosition(segs[i].end, cur):
+				if i == last { // Tail
+					ret = append(ret, newBodyPart(getTailImageType(segs[i].dir), *cur))
+				} else { // Body Curve
+					ret = append(ret, newBodyPart(getCurveBodyImageType(segs[i].dir, segs[i+1].dir), *cur))
+				}
+
+			case equalPosition(segs[i].start, cur):
+				if i == 0 { // Head
+					ret = append(ret, newBodyPart(getHeadImageType(segs[i].dir), *cur))
+				} else { // Body Straigth
+					ret = append(ret, newBodyPart(getBodyImageType(segs[i].dir), *cur))
+				}
+			}
+
+			if equalPosition(cur, segs[i].start) {
+				break LoopSegment
+			}
+
+			cur = g.getNextPosition(segs[i].dir, cur)
+		}
+	}
+	return ret
 }
 
 func equalPosition(a, b *Position) bool {

@@ -13,8 +13,10 @@ func TestGetFreePosition1(t *testing.T) {
 	p, err := g.getFreePosition(
 		[]*Segment{
 			newSegment(East, newPosition(0, 1), newPosition(2, 1)),
-			newSegment(West, newPosition(2, 0), newPosition(1, 0)),
-			newSegment(East, newPosition(1, 2), newPosition(2, 2)),
+			newSegment(South, newPosition(2, 0), newPosition(2, 0)),
+			newSegment(West, newPosition(0, 0), newPosition(1, 0)),
+			newSegment(South, newPosition(1, 2), newPosition(1, 2)),
+			newSegment(East, newPosition(0, 2), newPosition(2, 2)),
 		},
 	)
 	if err != nil {
@@ -32,8 +34,10 @@ func TestGetFreePosition2(t *testing.T) {
 	p, err := g.getFreePosition(
 		[]*Segment{
 			newSegment(South, newPosition(1, 0), newPosition(1, 2)),
-			newSegment(North, newPosition(2, 2), newPosition(2, 1)),
-			newSegment(South, newPosition(0, 1), newPosition(0, 2)),
+			newSegment(West, newPosition(2, 2), newPosition(2, 2)),
+			newSegment(North, newPosition(2, 0), newPosition(2, 1)),
+			newSegment(West, newPosition(0, 1), newPosition(0, 1)),
+			newSegment(South, newPosition(0, 0), newPosition(0, 2)),
 		},
 	)
 	if err != nil {
@@ -103,8 +107,10 @@ func TestMove1(t *testing.T) {
 		East,
 		[]*Segment{
 			newSegment(East, newPosition(0, 1), newPosition(2, 1)),
-			newSegment(West, newPosition(2, 0), newPosition(1, 0)),
-			newSegment(East, newPosition(1, 2), newPosition(2, 2)),
+			newSegment(South, newPosition(2, 0), newPosition(2, 0)),
+			newSegment(West, newPosition(0, 0), newPosition(1, 0)),
+			newSegment(South, newPosition(1, 2), newPosition(1, 2)),
+			newSegment(East, newPosition(0, 2), newPosition(2, 2)),
 		},
 		newPosition(1, 1),
 		false,
@@ -114,8 +120,10 @@ func TestMove1(t *testing.T) {
 	} else {
 		exp := []*Segment{
 			newSegment(East, newPosition(1, 1), newPosition(2, 1)),
-			newSegment(West, newPosition(2, 0), newPosition(1, 0)),
-			newSegment(East, newPosition(1, 2), newPosition(0, 2)),
+			newSegment(South, newPosition(2, 0), newPosition(2, 0)),
+			newSegment(West, newPosition(0, 0), newPosition(1, 0)),
+			newSegment(South, newPosition(1, 2), newPosition(1, 2)),
+			newSegment(East, newPosition(0, 2), newPosition(0, 2)),
 		}
 		if diff := pretty.Compare(exp, p); diff != "" {
 			t.Errorf("unexpected value\n%s", diff)
@@ -199,5 +207,59 @@ func TestGetPosition(t *testing.T) {
 		if !reflect.DeepEqual(v, tests[i].exp) {
 			t.Errorf("unexpected value at %d, exp [%v] got [%v]", i, tests[i].exp, v)
 		}
+	}
+}
+
+func TestGetBodyParts1(t *testing.T) {
+	g := newGrid(3, 3)
+	v := g.getBodyParts(
+		[]*Segment{
+			newSegment(East, newPosition(0, 1), newPosition(2, 1)),
+			newSegment(South, newPosition(2, 0), newPosition(2, 0)),
+			newSegment(West, newPosition(0, 0), newPosition(1, 0)),
+			newSegment(South, newPosition(1, 2), newPosition(1, 2)),
+			newSegment(East, newPosition(0, 2), newPosition(2, 2)),
+		},
+	)
+	exp := []*BodyPart{
+		&BodyPart{BodySouthWest, newPosition(2, 1)},
+		&BodyPart{HeadEast, newPosition(0, 1)},
+		&BodyPart{BodyNorthWest, newPosition(2, 0)},
+		&BodyPart{BodySouthEast, newPosition(1, 0)},
+		&BodyPart{BodyHorizontal, newPosition(0, 0)},
+		&BodyPart{BodyNorthEast, newPosition(1, 2)},
+		&BodyPart{TailEast, newPosition(2, 2)},
+		&BodyPart{BodyHorizontal, newPosition(0, 2)},
+	}
+
+	if diff := pretty.Compare(exp, v); diff != "" {
+		t.Errorf("unexpected value\n%s", diff)
+	}
+}
+
+func TestGetBodyParts2(t *testing.T) {
+	g := newGrid(3, 3)
+	v := g.getBodyParts(
+		[]*Segment{
+			newSegment(South, newPosition(1, 0), newPosition(1, 2)),
+			newSegment(West, newPosition(2, 2), newPosition(2, 2)),
+			newSegment(North, newPosition(2, 0), newPosition(2, 1)),
+			newSegment(West, newPosition(0, 1), newPosition(0, 1)),
+			newSegment(South, newPosition(0, 0), newPosition(0, 2)),
+		},
+	)
+	exp := []*BodyPart{
+		&BodyPart{BodyNorthWest, newPosition(1, 2)},
+		&BodyPart{HeadSouth, newPosition(1, 0)},
+		&BodyPart{BodyNorthEast, newPosition(2, 2)},
+		&BodyPart{BodySouthWest, newPosition(2, 1)},
+		&BodyPart{BodyVertical, newPosition(2, 0)},
+		&BodyPart{BodySouthEast, newPosition(0, 1)},
+		&BodyPart{TailSouth, newPosition(0, 2)},
+		&BodyPart{BodyVertical, newPosition(0, 0)},
+	}
+
+	if diff := pretty.Compare(exp, v); diff != "" {
+		t.Errorf("unexpected value\n%s", diff)
 	}
 }

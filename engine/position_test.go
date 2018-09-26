@@ -5,10 +5,18 @@ import (
 )
 
 func TestPosition(t *testing.T) {
-	p := newPosition(1, 2)
+	a := 1
+	b := 2
+	p := newPosition(a, b)
 
 	exp := "1-2"
 	if p.String() != exp {
 		t.Errorf("unexpected value, exp [%v] got [%v]", exp, p.String())
+	}
+	if p.X() != a {
+		t.Errorf("unexpected value, exp [%v] got [%v]", a, p.X())
+	}
+	if p.Y() != b {
+		t.Errorf("unexpected value, exp [%v] got [%v]", b, p.Y())
 	}
 }
