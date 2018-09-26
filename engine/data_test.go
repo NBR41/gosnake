@@ -164,8 +164,7 @@ func TestMoveNorth1(t *testing.T) {
 			newSegment(North, newPosition(0, 1), newPosition(0, 1)),
 			newSegment(West, newPosition(0, 0), newPosition(1, 0)),
 		},
-		grid:  &Grid{colNb: 2, rowNb: 2},
-		fruit: newPosition(1, 1),
+		grid: &Grid{colNb: 2, rowNb: 2},
 	}
 
 	err := d.MoveNorth()
@@ -195,8 +194,7 @@ func TestMoveNorth2(t *testing.T) {
 			newSegment(South, newPosition(0, 1), newPosition(0, 1)),
 			newSegment(West, newPosition(0, 0), newPosition(1, 0)),
 		},
-		grid:  &Grid{colNb: 2, rowNb: 2},
-		fruit: newPosition(1, 1),
+		grid: &Grid{colNb: 2, rowNb: 2},
 	}
 
 	err := d.MoveNorth()
@@ -226,8 +224,7 @@ func TestMoveWest1(t *testing.T) {
 			newSegment(West, newPosition(0, 0), newPosition(0, 0)),
 			newSegment(North, newPosition(1, 0), newPosition(1, 1)),
 		},
-		grid:  &Grid{colNb: 2, rowNb: 2},
-		fruit: newPosition(0, 1),
+		grid: &Grid{colNb: 2, rowNb: 2},
 	}
 
 	err := d.MoveWest()
@@ -258,8 +255,7 @@ func TestMoveWest2(t *testing.T) {
 			newSegment(East, newPosition(0, 0), newPosition(1, 0)),
 			newSegment(North, newPosition(1, 1), newPosition(1, 1)),
 		},
-		grid:  &Grid{colNb: 2, rowNb: 2},
-		fruit: newPosition(0, 1),
+		grid: &Grid{colNb: 2, rowNb: 2},
 	}
 
 	err := d.MoveWest()
@@ -290,8 +286,7 @@ func TestMoveEast1(t *testing.T) {
 			newSegment(North, newPosition(0, 0), newPosition(0, 0)),
 			newSegment(West, newPosition(0, 1), newPosition(0, 1)),
 		},
-		grid:  &Grid{colNb: 2, rowNb: 2},
-		fruit: newPosition(1, 1),
+		grid: &Grid{colNb: 2, rowNb: 2},
 	}
 	err := d.MoveEast()
 	if err != nil {
@@ -321,8 +316,7 @@ func TestMoveEast2(t *testing.T) {
 			newSegment(West, newPosition(0, 0), newPosition(1, 0)),
 			newSegment(North, newPosition(1, 1), newPosition(1, 1)),
 		},
-		grid:  &Grid{colNb: 2, rowNb: 2},
-		fruit: newPosition(0, 1),
+		grid: &Grid{colNb: 2, rowNb: 2},
 	}
 	err := d.MoveEast()
 	if err != nil {
@@ -352,8 +346,7 @@ func TestMoveSouth1(t *testing.T) {
 			newSegment(North, newPosition(1, 1), newPosition(1, 0)),
 			newSegment(East, newPosition(0, 0), newPosition(0, 0)),
 		},
-		grid:  &Grid{colNb: 2, rowNb: 2},
-		fruit: newPosition(0, 1),
+		grid: &Grid{colNb: 2, rowNb: 2},
 	}
 
 	err := d.MoveSouth()
@@ -383,8 +376,7 @@ func TestMoveSouth2(t *testing.T) {
 			newSegment(South, newPosition(0, 1), newPosition(0, 1)),
 			newSegment(West, newPosition(0, 0), newPosition(1, 0)),
 		},
-		grid:  &Grid{colNb: 2, rowNb: 2},
-		fruit: newPosition(1, 1),
+		grid: &Grid{colNb: 2, rowNb: 2},
 	}
 
 	err := d.MoveSouth()
