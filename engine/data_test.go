@@ -81,7 +81,7 @@ func TestSetFruit2(t *testing.T) {
 	}
 }
 
-func TestMove(t *testing.T) {
+func TestDataMove1(t *testing.T) {
 	d := &Data{
 		score: 0,
 		dir:   West,
@@ -104,90 +104,10 @@ func TestMove(t *testing.T) {
 	}
 }
 
-func TestMoveNorth(t *testing.T) {
-	var p = make([]*Data, 2, 2)
-	for i := 0; i < 2; i++ {
-		p[i] = &Data{
-			score: 0,
-			dir:   South,
-			body:  []*Segment{newSegment(West, newPosition(0, 0), newPosition(1, 0))},
-			grid:  &Grid{colNb: 2, rowNb: 2},
-		}
-	}
-	err := p[0].MoveNorth()
-	if err != nil {
-		t.Errorf("unexpected error, %v", err)
-	} else {
-		if diff := pretty.Compare(p[0], p[1]); diff != "" {
-			t.Errorf("unexpected value\n%s", diff)
-		}
-	}
-}
-
-func TestMoveWest(t *testing.T) {
-	var p = make([]*Data, 2, 2)
-	for i := 0; i < 2; i++ {
-		p[i] = &Data{
-			score: 0,
-			dir:   East,
-			body:  []*Segment{newSegment(West, newPosition(0, 0), newPosition(1, 0))},
-			grid:  &Grid{colNb: 2, rowNb: 2},
-		}
-	}
-	err := p[0].MoveWest()
-	if err != nil {
-		t.Errorf("unexpected error, %v", err)
-	} else {
-		if diff := pretty.Compare(p[0], p[1]); diff != "" {
-			t.Errorf("unexpected value\n%s", diff)
-		}
-	}
-}
-
-func TestMoveEast(t *testing.T) {
-	var p = make([]*Data, 2, 2)
-	for i := 0; i < 2; i++ {
-		p[i] = &Data{
-			score: 0,
-			dir:   West,
-			body:  []*Segment{newSegment(West, newPosition(0, 0), newPosition(1, 0))},
-			grid:  &Grid{colNb: 2, rowNb: 2},
-		}
-	}
-	err := p[0].MoveEast()
-	if err != nil {
-		t.Errorf("unexpected error, %v", err)
-	} else {
-		if diff := pretty.Compare(p[0], p[1]); diff != "" {
-			t.Errorf("unexpected value\n%s", diff)
-		}
-	}
-}
-
-func TestMoveSouth1(t *testing.T) {
-	var p = make([]*Data, 2, 2)
-	for i := 0; i < 2; i++ {
-		p[i] = &Data{
-			score: 0,
-			dir:   North,
-			body:  []*Segment{newSegment(West, newPosition(0, 0), newPosition(1, 0))},
-			grid:  &Grid{colNb: 2, rowNb: 2},
-		}
-	}
-	err := p[0].MoveSouth()
-	if err != nil {
-		t.Errorf("unexpected error, %v", err)
-	} else {
-		if diff := pretty.Compare(p[0], p[1]); diff != "" {
-			t.Errorf("unexpected value\n%s", diff)
-		}
-	}
-}
-
-func TestMoveSouth2(t *testing.T) {
+func TestDataMove2(t *testing.T) {
 	d := &Data{
 		score: 0,
-		dir:   West,
+		dir:   South,
 		body: []*Segment{
 			newSegment(West, newPosition(0, 0), newPosition(1, 0)),
 			newSegment(North, newPosition(1, 1), newPosition(1, 1)),
@@ -214,7 +134,7 @@ func TestMoveSouth2(t *testing.T) {
 		},
 	}
 
-	err := d.MoveSouth()
+	err := d.Move()
 	if err == nil {
 		t.Error("expecting error")
 	} else {
@@ -223,6 +143,256 @@ func TestMoveSouth2(t *testing.T) {
 		}
 		if err != ErrNoPosition {
 			t.Errorf("unexpected error, exp [%v] got [%v]", ErrNoPosition, err)
+		}
+	}
+}
+
+func TestMoveNorth1(t *testing.T) {
+	d := &Data{
+		score: 0,
+		dir:   West,
+		body: []*Segment{
+			newSegment(West, newPosition(0, 0), newPosition(1, 0)),
+			newSegment(North, newPosition(1, 1), newPosition(1, 1)),
+		},
+		grid: &Grid{colNb: 2, rowNb: 2},
+	}
+	exp := &Data{
+		score: 0,
+		dir:   North,
+		body: []*Segment{
+			newSegment(North, newPosition(0, 1), newPosition(0, 1)),
+			newSegment(West, newPosition(0, 0), newPosition(1, 0)),
+		},
+		grid:  &Grid{colNb: 2, rowNb: 2},
+		fruit: newPosition(1, 1),
+	}
+
+	err := d.MoveNorth()
+	if err != nil {
+		t.Errorf("unexpected error, %v", err)
+	} else {
+		if diff := pretty.Compare(d, exp); diff != "" {
+			t.Errorf("unexpected value\n%s", diff)
+		}
+	}
+}
+
+func TestMoveNorth2(t *testing.T) {
+	d := &Data{
+		score: 0,
+		dir:   South,
+		body: []*Segment{
+			newSegment(West, newPosition(0, 0), newPosition(1, 0)),
+			newSegment(North, newPosition(1, 1), newPosition(1, 1)),
+		},
+		grid: &Grid{colNb: 2, rowNb: 2},
+	}
+	exp := &Data{
+		score: 0,
+		dir:   South,
+		body: []*Segment{
+			newSegment(South, newPosition(0, 1), newPosition(0, 1)),
+			newSegment(West, newPosition(0, 0), newPosition(1, 0)),
+		},
+		grid:  &Grid{colNb: 2, rowNb: 2},
+		fruit: newPosition(1, 1),
+	}
+
+	err := d.MoveNorth()
+	if err != nil {
+		t.Errorf("unexpected error, %v", err)
+	} else {
+		if diff := pretty.Compare(d, exp); diff != "" {
+			t.Errorf("unexpected value\n%s", diff)
+		}
+	}
+}
+
+func TestMoveWest1(t *testing.T) {
+	d := &Data{
+		score: 0,
+		dir:   North,
+		body: []*Segment{
+			newSegment(North, newPosition(1, 0), newPosition(1, 1)),
+			newSegment(East, newPosition(0, 1), newPosition(0, 1)),
+		},
+		grid: &Grid{colNb: 2, rowNb: 2},
+	}
+	exp := &Data{
+		score: 0,
+		dir:   West,
+		body: []*Segment{
+			newSegment(West, newPosition(0, 0), newPosition(0, 0)),
+			newSegment(North, newPosition(1, 0), newPosition(1, 1)),
+		},
+		grid:  &Grid{colNb: 2, rowNb: 2},
+		fruit: newPosition(0, 1),
+	}
+
+	err := d.MoveWest()
+	if err != nil {
+		t.Errorf("unexpected error, %v", err)
+	} else {
+		if diff := pretty.Compare(d, exp); diff != "" {
+			t.Errorf("unexpected value\n%s", diff)
+		}
+	}
+}
+
+func TestMoveWest2(t *testing.T) {
+	d := &Data{
+		score: 0,
+		dir:   East,
+		body: []*Segment{
+			newSegment(East, newPosition(1, 0), newPosition(1, 0)),
+			newSegment(North, newPosition(1, 1), newPosition(1, 1)),
+			newSegment(East, newPosition(0, 1), newPosition(0, 1)),
+		},
+		grid: &Grid{colNb: 2, rowNb: 2},
+	}
+	exp := &Data{
+		score: 0,
+		dir:   East,
+		body: []*Segment{
+			newSegment(East, newPosition(0, 0), newPosition(1, 0)),
+			newSegment(North, newPosition(1, 1), newPosition(1, 1)),
+		},
+		grid:  &Grid{colNb: 2, rowNb: 2},
+		fruit: newPosition(0, 1),
+	}
+
+	err := d.MoveWest()
+	if err != nil {
+		t.Errorf("unexpected error, %v", err)
+	} else {
+		if diff := pretty.Compare(d, exp); diff != "" {
+			t.Errorf("unexpected value\n%s", diff)
+		}
+	}
+}
+
+func TestMoveEast1(t *testing.T) {
+	d := &Data{
+		score: 0,
+		dir:   North,
+		body: []*Segment{
+			newSegment(North, newPosition(0, 0), newPosition(0, 0)),
+			newSegment(West, newPosition(0, 1), newPosition(1, 1)),
+		},
+		grid: &Grid{colNb: 2, rowNb: 2},
+	}
+	exp := &Data{
+		score: 0,
+		dir:   East,
+		body: []*Segment{
+			newSegment(East, newPosition(1, 0), newPosition(1, 0)),
+			newSegment(North, newPosition(0, 0), newPosition(0, 0)),
+			newSegment(West, newPosition(0, 1), newPosition(0, 1)),
+		},
+		grid:  &Grid{colNb: 2, rowNb: 2},
+		fruit: newPosition(1, 1),
+	}
+	err := d.MoveEast()
+	if err != nil {
+		t.Errorf("unexpected error, %v", err)
+	} else {
+		if diff := pretty.Compare(d, exp); diff != "" {
+			t.Errorf("unexpected value\n%s", diff)
+		}
+	}
+}
+
+func TestMoveEast2(t *testing.T) {
+	d := &Data{
+		score: 0,
+		dir:   West,
+		body: []*Segment{
+			newSegment(West, newPosition(1, 0), newPosition(1, 0)),
+			newSegment(North, newPosition(1, 1), newPosition(1, 1)),
+			newSegment(East, newPosition(0, 1), newPosition(0, 1)),
+		},
+		grid: &Grid{colNb: 2, rowNb: 2},
+	}
+	exp := &Data{
+		score: 0,
+		dir:   West,
+		body: []*Segment{
+			newSegment(West, newPosition(0, 0), newPosition(1, 0)),
+			newSegment(North, newPosition(1, 1), newPosition(1, 1)),
+		},
+		grid:  &Grid{colNb: 2, rowNb: 2},
+		fruit: newPosition(0, 1),
+	}
+	err := d.MoveEast()
+	if err != nil {
+		t.Errorf("unexpected error, %v", err)
+	} else {
+		if diff := pretty.Compare(d, exp); diff != "" {
+			t.Errorf("unexpected value\n%s", diff)
+		}
+	}
+}
+
+func TestMoveSouth1(t *testing.T) {
+	d := &Data{
+		score: 0,
+		dir:   North,
+		body: []*Segment{
+			newSegment(North, newPosition(1, 0), newPosition(1, 0)),
+			newSegment(East, newPosition(0, 0), newPosition(0, 0)),
+			newSegment(North, newPosition(0, 1), newPosition(0, 1)),
+		},
+		grid: &Grid{colNb: 2, rowNb: 2},
+	}
+	exp := &Data{
+		score: 0,
+		dir:   North,
+		body: []*Segment{
+			newSegment(North, newPosition(1, 1), newPosition(1, 0)),
+			newSegment(East, newPosition(0, 0), newPosition(0, 0)),
+		},
+		grid:  &Grid{colNb: 2, rowNb: 2},
+		fruit: newPosition(0, 1),
+	}
+
+	err := d.MoveSouth()
+	if err != nil {
+		t.Errorf("unexpected error, %v", err)
+	} else {
+		if diff := pretty.Compare(d, exp); diff != "" {
+			t.Errorf("unexpected value\n%s", diff)
+		}
+	}
+}
+
+func TestMoveSouth2(t *testing.T) {
+	d := &Data{
+		score: 0,
+		dir:   West,
+		body: []*Segment{
+			newSegment(West, newPosition(0, 0), newPosition(1, 0)),
+			newSegment(North, newPosition(1, 1), newPosition(1, 1)),
+		},
+		grid: &Grid{colNb: 2, rowNb: 2},
+	}
+	exp := &Data{
+		score: 0,
+		dir:   South,
+		body: []*Segment{
+			newSegment(South, newPosition(0, 1), newPosition(0, 1)),
+			newSegment(West, newPosition(0, 0), newPosition(1, 0)),
+		},
+		grid:  &Grid{colNb: 2, rowNb: 2},
+		fruit: newPosition(1, 1),
+	}
+
+	err := d.MoveSouth()
+	if err != nil {
+		t.Errorf("unexpected error, %v", err)
+	} else {
+		if diff := pretty.Compare(d, exp); diff != "" {
+			t.Errorf("unexpected value\n%s", diff)
 		}
 	}
 }

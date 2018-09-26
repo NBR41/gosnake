@@ -30,6 +30,10 @@ func (d *Data) SetFruit() error {
 	return err
 }
 
+func (d *Data) GetFruit() *Position {
+	return d.fruit
+}
+
 //Move move snake in the current direction
 func (d *Data) Move() error {
 	return d.move(d.Direction())
@@ -38,7 +42,7 @@ func (d *Data) Move() error {
 //MoveNorth move snake to the North if the current dir is not South
 func (d *Data) MoveNorth() error {
 	if d.dir == South {
-		return nil
+		return d.Move()
 	}
 	return d.move(North)
 }
@@ -46,7 +50,7 @@ func (d *Data) MoveNorth() error {
 //MoveSouth move snake to the South if the current dir is not North
 func (d *Data) MoveSouth() error {
 	if d.dir == North {
-		return nil
+		return d.Move()
 	}
 	return d.move(South)
 }
@@ -54,7 +58,7 @@ func (d *Data) MoveSouth() error {
 //MoveWest move snake to the West if the current dir is not East
 func (d *Data) MoveWest() error {
 	if d.dir == East {
-		return nil
+		return d.Move()
 	}
 	return d.move(West)
 }
@@ -62,7 +66,7 @@ func (d *Data) MoveWest() error {
 //MoveEast move snake to the East if the current dir is not West
 func (d *Data) MoveEast() error {
 	if d.dir == West {
-		return nil
+		return d.Move()
 	}
 	return d.move(East)
 }
@@ -100,5 +104,8 @@ func (d *Data) move(dir Direction) error {
 	}
 	d.body = segs
 	d.dir = dir
-	return d.SetFruit()
+	if chomp {
+		err = d.SetFruit()
+	}
+	return err
 }

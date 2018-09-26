@@ -168,6 +168,8 @@ func (g *Grid) getBodyParts(segs []*Segment) []*BodyPart {
 				} else { // Body Straigth
 					ret = append(ret, newBodyPart(getBodyImageType(segs[i].dir), *cur))
 				}
+			default:
+				ret = append(ret, newBodyPart(getBodyImageType(segs[i].dir), *cur))
 			}
 
 			if equalPosition(cur, segs[i].start) {

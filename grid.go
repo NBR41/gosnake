@@ -1,8 +1,10 @@
 package gosnake
 
 import (
+	//"fmt"
 	"image/color"
 
+	"github.com/NBR41/gosnake/assets"
 	"github.com/NBR41/gosnake/engine"
 	"github.com/golang/freetype/truetype"
 	"github.com/hajimehoshi/ebiten"
@@ -12,10 +14,15 @@ import (
 )
 
 var (
-	GrayColor = color.RGBA{236, 240, 241, 255.0}
+	GrayColor       = color.RGBA{236, 240, 241, 255.0}
+	leftTurnRadian  = -1.5708
+	uTurnRadian     = 3.14159
+	rightTurnRadian = 1.5708
 )
 
-func GridView(size, colnb, rownb int, arcadeFont *truetype.Font) (fView, error) {
+func GridView(
+	size, colnb, rownb int, body *assets.Body, imgfruit *ebiten.Image, arcadeFont *truetype.Font,
+) (fView, error) {
 	fontface := truetype.NewFace(arcadeFont, &truetype.Options{
 		Size:    32,
 		DPI:     72,
@@ -43,6 +50,70 @@ func GridView(size, colnb, rownb int, arcadeFont *truetype.Font) (fView, error) 
 			text.Draw(view, "PRESS SPACE", fontface, (gridWith/2)-176, (gridHeight/2)-(10+32), color.White)
 			text.Draw(view, "TO BEGIN", fontface, (gridWith/2)-128, (gridHeight/2)+(10), color.White)
 		case GameStart, GamePause, GameOver:
+			ops := &ebiten.DrawImageOptions{}
+			// fruit
+			ops.GeoM.Reset()
+			translate(ops, data.GetFruit(), size)
+			if err := view.DrawImage(imgfruit, ops); err != nil {
+				return nil, err
+			}
+
+			// body
+			parts := data.GetBodyParts()
+			for i := range parts {
+				ops.GeoM.Reset()
+				var img *ebiten.Image
+				switch parts[i].GetImage() {
+
+				case engine.HeadNorth:
+					img = body.Head
+				case engine.HeadEast:
+					img = body.Head
+					ops.GeoM.Rotate(rightTurnRadian)
+				case engine.HeadSouth:
+					img = body.Head
+					ops.GeoM.Rotate(uTurnRadian)
+				case engine.HeadWest:
+					img = body.Head
+					ops.GeoM.Rotate(leftTurnRadian)
+
+				case engine.TailNorth:
+					img = body.Tail
+					ops.GeoM.Rotate(uTurnRadian)
+				case engine.TailEast:
+					ops.GeoM.Rotate(leftTurnRadian)
+					img = body.Tail
+				case engine.TailSouth:
+					img = body.Tail
+				case engine.TailWest:
+					img = body.Tail
+					ops.GeoM.Rotate(rightTurnRadian)
+
+				case engine.BodyHorizontal:
+					img = body.Straight
+				case engine.BodyVertical:
+					img = body.Straight
+					ops.GeoM.Rotate(rightTurnRadian)
+
+				case engine.BodyNorthWest:
+					img = body.Curve
+				case engine.BodyNorthEast:
+					img = body.Curve
+					ops.GeoM.Rotate(rightTurnRadian)
+				case engine.BodySouthEast:
+					img = body.Curve
+					ops.GeoM.Rotate(uTurnRadian)
+				case engine.BodySouthWest:
+					img = body.Curve
+					ops.GeoM.Rotate(leftTurnRadian)
+				}
+
+				translate(ops, parts[i].GetPosition(), size)
+				if err := view.DrawImage(img, ops); err != nil {
+					return nil, err
+				}
+			}
+
 			if state == GamePause {
 				img, err := getMessageImage()
 				if err != nil {
@@ -68,6 +139,11 @@ func GridView(size, colnb, rownb int, arcadeFont *truetype.Font) (fView, error) 
 
 		return view, nil
 	}, nil
+}
+
+func translate(ops *ebiten.DrawImageOptions, pos *engine.Position, size int) {
+	//fmt.Println(pos.X(), pos.Y(), float64(pos.X()*size), float64(pos.Y()*size))
+	ops.GeoM.Translate(float64(pos.X()*size), float64(pos.Y()*size))
 }
 
 func getMessageImage() (*ebiten.Image, error) {

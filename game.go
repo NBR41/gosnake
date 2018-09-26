@@ -31,17 +31,17 @@ type Game struct {
 }
 
 func NewGame(size, colnb, rownb int) (*Game, error) {
-	lAssets, err := assets.LoadAssets(size, colnb, rownb)
+	assets, err := assets.LoadAssets(size, colnb, rownb)
 	if err != nil {
 		return nil, err
 	}
 
-	gridView, err := GridView(size, colnb, rownb, lAssets.ArcadeFont)
+	gridView, err := GridView(size, colnb, rownb, assets.Body, assets.Fruit, assets.ArcadeFont)
 	if err != nil {
 		return nil, err
 	}
 
-	skinView, err := SkinView(lAssets.Skin, lAssets.ArcadeFont)
+	skinView, err := SkinView(assets.Skin, assets.ArcadeFont)
 	if err != nil {
 		return nil, err
 	}
@@ -103,7 +103,7 @@ func (g *Game) update(screen *ebiten.Image) error {
 			case rightKeyPressed():
 				err = g.data.MoveEast()
 			default:
-				err = g.data.Move()
+				//err = g.data.Move()
 			}
 			if err != nil {
 				if err == engine.ErrColision {

@@ -129,14 +129,13 @@ func (g *Generator) GetSkin() *image.RGBA {
 }
 
 func WriteFiles() {
-	/*
-		writeFile("straight.png", GetBodyStraight())
-		writeFile("curve.png", GetBodyCurve())
-		writeFile("tail.png", GetBodyTail())
-		writeFile("head.png", GetBodyHead())
-		writeFile("fruit.png", GetFruit())
-		writeFile("skin.png", GetSkin())
-	*/
+	g := NewGenerator(20, 25, 50)
+	writeFile("straight.png", g.GetBodyStraight())
+	writeFile("curve.png", g.GetBodyCurve())
+	writeFile("tail.png", g.GetBodyTail())
+	writeFile("head.png", g.GetBodyHead())
+	writeFile("fruit.png", g.GetFruit())
+	writeFile("skin.png", g.GetSkin())
 }
 
 func getBase(width, heigth int) *image.RGBA {

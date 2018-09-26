@@ -31,6 +31,14 @@ func newBodyPart(img ImageType, pos Position) *BodyPart {
 	return &BodyPart{img: img, pos: &pos}
 }
 
+func (b *BodyPart) GetImage() ImageType {
+	return b.img
+}
+
+func (b *BodyPart) GetPosition() *Position {
+	return b.pos
+}
+
 func getHeadImageType(dir Direction) ImageType {
 	switch dir {
 	case North:
