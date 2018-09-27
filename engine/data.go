@@ -20,7 +20,7 @@ func NewData(colnb, rownb int) *Data {
 }
 
 func newBody(rownb int) []*Segment {
-	return []*Segment{newSegment(East, newPosition(2, rownb/2), newPosition(0, rownb/2))}
+	return []*Segment{newSegment(East, NewPosition(2, rownb/2), NewPosition(0, rownb/2))}
 }
 
 //SetFruit set fruit position on the grid

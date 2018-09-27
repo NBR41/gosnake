@@ -4,9 +4,6 @@ import (
 	"image"
 	"image/color"
 	"image/draw"
-	"image/png"
-	"log"
-	"os"
 )
 
 const (
@@ -128,16 +125,6 @@ func (g *Generator) GetSkin() *image.RGBA {
 	return dst
 }
 
-func WriteFiles() {
-	g := NewGenerator(20, 25, 50)
-	writeFile("straight.png", g.GetBodyStraight())
-	writeFile("curve.png", g.GetBodyCurve())
-	writeFile("tail.png", g.GetBodyTail())
-	writeFile("head.png", g.GetBodyHead())
-	writeFile("fruit.png", g.GetFruit())
-	writeFile("skin.png", g.GetSkin())
-}
-
 func getBase(width, heigth int) *image.RGBA {
 	dst := image.NewRGBA(image.Rect(0, 0, width, heigth))
 	draw.Draw(dst, dst.Bounds(), image.Transparent, image.ZP, draw.Src)
@@ -148,20 +135,4 @@ func getColorizedImage(width, height int, color color.RGBA) *image.RGBA {
 	img := image.NewRGBA(image.Rect(0, 0, width, height))
 	draw.Draw(img, img.Bounds(), &image.Uniform{color}, image.ZP, draw.Src)
 	return img
-}
-
-func writeFile(name string, dst *image.RGBA) {
-	f, err := os.Create(name)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if err := png.Encode(f, dst); err != nil {
-		f.Close()
-		log.Fatal(err)
-	}
-
-	if err := f.Close(); err != nil {
-		log.Fatal(err)
-	}
 }

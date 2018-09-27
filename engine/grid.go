@@ -155,6 +155,13 @@ func (g *Grid) getBodyParts(segs []*Segment) []*BodyPart {
 	LoopSegment:
 		for {
 			switch {
+			case equalPosition(segs[i].start, cur):
+				if i == 0 { // Head
+					ret = append(ret, newBodyPart(getHeadImageType(segs[i].dir), *cur))
+				} else { // Body Straigth
+					ret = append(ret, newBodyPart(getBodyImageType(segs[i].dir), *cur))
+				}
+
 			case equalPosition(segs[i].end, cur):
 				if i == last { // Tail
 					ret = append(ret, newBodyPart(getTailImageType(segs[i].dir), *cur))
@@ -162,12 +169,6 @@ func (g *Grid) getBodyParts(segs []*Segment) []*BodyPart {
 					ret = append(ret, newBodyPart(getCurveBodyImageType(segs[i].dir, segs[i+1].dir), *cur))
 				}
 
-			case equalPosition(segs[i].start, cur):
-				if i == 0 { // Head
-					ret = append(ret, newBodyPart(getHeadImageType(segs[i].dir), *cur))
-				} else { // Body Straigth
-					ret = append(ret, newBodyPart(getBodyImageType(segs[i].dir), *cur))
-				}
 			default:
 				ret = append(ret, newBodyPart(getBodyImageType(segs[i].dir), *cur))
 			}

@@ -29,6 +29,8 @@ func SkinView(skin *ebiten.Image, arcadeFont *truetype.Font) (fView, error) {
 		return nil, err
 	}
 
+	text.Draw(skin, "GoSnake", fontface, 10, 34, color.White)
+
 	return func(state gameState, data *engine.Data) (*ebiten.Image, error) {
 		if err := view.Clear(); err != nil {
 			return nil, err
@@ -49,7 +51,7 @@ func SkinView(skin *ebiten.Image, arcadeFont *truetype.Font) (fView, error) {
 					score = MaxScoreView
 				}
 				numstr := strconv.Itoa(score)
-				text.Draw(view, numstr, fontface, 682-(len(numstr)*27), 64, color.White)
+				text.Draw(view, numstr, fontface, width-((len(numstr)*27)+6), 34, color.White)
 			}
 		}
 		return view, nil

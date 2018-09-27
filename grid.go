@@ -1,10 +1,11 @@
 package gosnake
 
 import (
-	//"fmt"
 	"image/color"
+	"math"
 
 	"github.com/NBR41/gosnake/assets"
+	"github.com/NBR41/gosnake/assets/sprite"
 	"github.com/NBR41/gosnake/engine"
 	"github.com/golang/freetype/truetype"
 	"github.com/hajimehoshi/ebiten"
@@ -14,10 +15,11 @@ import (
 )
 
 var (
-	GrayColor       = color.RGBA{236, 240, 241, 255.0}
-	leftTurnRadian  = -1.5708
-	uTurnRadian     = 3.14159
-	rightTurnRadian = 1.5708
+	GrayColor = color.RGBA{236, 240, 241, 255.0}
+
+	uTurnRadian     = math.Pi
+	rightTurnRadian = math.Pi / 2
+	leftTurnRadian  = -1 * math.Pi / 2
 )
 
 func GridView(
@@ -41,7 +43,7 @@ func GridView(
 		if err := view.Clear(); err != nil {
 			return nil, err
 		}
-		if err := view.Fill(color.Black); err != nil {
+		if err := view.Fill(sprite.BackgroundColor); err != nil {
 			return nil, err
 		}
 
@@ -52,64 +54,64 @@ func GridView(
 		case GameStart, GamePause, GameOver:
 			ops := &ebiten.DrawImageOptions{}
 			// fruit
-			ops.GeoM.Reset()
-			translate(ops, data.GetFruit(), size)
-			if err := view.DrawImage(imgfruit, ops); err != nil {
+			if err := drawSprite(view, imgfruit, ops, data.GetFruit(), size, nil); err != nil {
 				return nil, err
 			}
 
 			// body
 			parts := data.GetBodyParts()
+			var turn *float64
+			var img *ebiten.Image
 			for i := range parts {
-				ops.GeoM.Reset()
-				var img *ebiten.Image
 				switch parts[i].GetImage() {
 
 				case engine.HeadNorth:
 					img = body.Head
+					turn = nil
 				case engine.HeadEast:
 					img = body.Head
-					ops.GeoM.Rotate(rightTurnRadian)
+					turn = &rightTurnRadian
 				case engine.HeadSouth:
 					img = body.Head
-					ops.GeoM.Rotate(uTurnRadian)
+					turn = &uTurnRadian
 				case engine.HeadWest:
 					img = body.Head
-					ops.GeoM.Rotate(leftTurnRadian)
+					turn = &leftTurnRadian
 
 				case engine.TailNorth:
 					img = body.Tail
-					ops.GeoM.Rotate(uTurnRadian)
+					turn = &uTurnRadian
 				case engine.TailEast:
-					ops.GeoM.Rotate(leftTurnRadian)
 					img = body.Tail
+					turn = &leftTurnRadian
 				case engine.TailSouth:
 					img = body.Tail
+					turn = nil
 				case engine.TailWest:
 					img = body.Tail
-					ops.GeoM.Rotate(rightTurnRadian)
+					turn = &rightTurnRadian
 
 				case engine.BodyHorizontal:
 					img = body.Straight
+					turn = nil
 				case engine.BodyVertical:
 					img = body.Straight
-					ops.GeoM.Rotate(rightTurnRadian)
+					turn = &rightTurnRadian
 
 				case engine.BodyNorthWest:
 					img = body.Curve
+					turn = nil
 				case engine.BodyNorthEast:
 					img = body.Curve
-					ops.GeoM.Rotate(rightTurnRadian)
+					turn = &rightTurnRadian
 				case engine.BodySouthEast:
 					img = body.Curve
-					ops.GeoM.Rotate(uTurnRadian)
+					turn = &uTurnRadian
 				case engine.BodySouthWest:
 					img = body.Curve
-					ops.GeoM.Rotate(leftTurnRadian)
+					turn = &leftTurnRadian
 				}
-
-				translate(ops, parts[i].GetPosition(), size)
-				if err := view.DrawImage(img, ops); err != nil {
+				if err := drawSprite(view, img, ops, parts[i].GetPosition(), size, turn); err != nil {
 					return nil, err
 				}
 			}
@@ -121,7 +123,7 @@ func GridView(
 				}
 				text.Draw(img, "GAME PAUSED", fontface, 24, 65-(10), color.White)
 				text.Draw(img, "PRESS SPACE", fontface, 24, 65+(10+31), color.White)
-				if err = pastMessageImage(view, img, gridHeight); err != nil {
+				if err = pastMessageImage(view, img, gridWith, gridHeight); err != nil {
 					return nil, err
 				}
 			} else if state == GameOver {
@@ -131,7 +133,7 @@ func GridView(
 				}
 				text.Draw(img, "GAME OVER", fontface, 56, 65-(10), color.White)
 				text.Draw(img, "PRESS SPACE", fontface, 24, 65+(10+31), color.White)
-				if err = pastMessageImage(view, img, gridHeight); err != nil {
+				if err = pastMessageImage(view, img, gridWith, gridHeight); err != nil {
 					return nil, err
 				}
 			}
@@ -141,9 +143,25 @@ func GridView(
 	}, nil
 }
 
-func translate(ops *ebiten.DrawImageOptions, pos *engine.Position, size int) {
-	//fmt.Println(pos.X(), pos.Y(), float64(pos.X()*size), float64(pos.Y()*size))
-	ops.GeoM.Translate(float64(pos.X()*size), float64(pos.Y()*size))
+func drawSprite(
+	view, img *ebiten.Image, ops *ebiten.DrawImageOptions, pos *engine.Position,
+	size int, turn *float64,
+) error {
+	ops.GeoM.Reset()
+	if turn != nil {
+		ops.GeoM.Rotate(*turn)
+		switch *turn {
+		case uTurnRadian:
+			ops.GeoM.Translate(float64((pos.X()+1)*size), float64((pos.Y()+1)*size))
+		case rightTurnRadian:
+			ops.GeoM.Translate(float64((pos.X()+1)*size), float64(pos.Y()*size))
+		case leftTurnRadian:
+			ops.GeoM.Translate(float64(pos.X()*size), float64((pos.Y()+1)*size))
+		}
+	} else {
+		ops.GeoM.Translate(float64(pos.X()*size), float64(pos.Y()*size))
+	}
+	return view.DrawImage(img, ops)
 }
 
 func getMessageImage() (*ebiten.Image, error) {
@@ -157,9 +175,9 @@ func getMessageImage() (*ebiten.Image, error) {
 	return img, nil
 }
 
-func pastMessageImage(view *ebiten.Image, img *ebiten.Image, gridHeight int) error {
+func pastMessageImage(view *ebiten.Image, img *ebiten.Image, gridWidth, gridHeight int) error {
 	ops := &ebiten.DrawImageOptions{}
 	ops.GeoM.Reset()
-	ops.GeoM.Translate(float64((gridHeight/2)-(389/2)), float64((gridHeight/2)-(130/2)))
+	ops.GeoM.Translate(float64((gridWidth/2)-(389/2)), float64((gridHeight/2)-(130/2)))
 	return view.DrawImage(img, ops)
 }

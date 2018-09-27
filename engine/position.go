@@ -9,7 +9,8 @@ type Position struct {
 	x, y int
 }
 
-func newPosition(x, y int) *Position {
+//NewPosition returns new instance of position
+func NewPosition(x, y int) *Position {
 	return &Position{x: x, y: y}
 }
 

@@ -103,7 +103,7 @@ func (g *Game) update(screen *ebiten.Image) error {
 			case rightKeyPressed():
 				err = g.data.MoveEast()
 			default:
-				//err = g.data.Move()
+				err = g.data.Move()
 			}
 			if err != nil {
 				if err == engine.ErrColision {
@@ -156,5 +156,6 @@ func (g *Game) update(screen *ebiten.Image) error {
 	if err := screen.DrawImage(gview, ops); err != nil {
 		return err
 	}
+
 	return nil
 }

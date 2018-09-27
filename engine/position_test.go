@@ -7,7 +7,7 @@ import (
 func TestPosition(t *testing.T) {
 	a := 1
 	b := 2
-	p := newPosition(a, b)
+	p := NewPosition(a, b)
 
 	exp := "1-2"
 	if p.String() != exp {
