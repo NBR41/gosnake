@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-	game, err := gosnake.NewGame(20, 50, 25)
+	game, err := gosnake.NewGame(20, 20, 10)
 	if err != nil {
 		panic(err)
 	}

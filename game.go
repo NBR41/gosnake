@@ -21,10 +21,14 @@ const (
 )
 
 type Game struct {
-	state    gameState
-	rand     *rand.Rand
-	data     *engine.Data
-	dir      *engine.Direction
+	state gameState
+	rand  *rand.Rand
+	data  *engine.Data
+	dir   *engine.Direction
+	size  int
+	colnb int
+	rownb int
+
 	skinView fView
 	gridView fView
 	audio    *Audio
@@ -54,6 +58,9 @@ func NewGame(size, colnb, rownb int) (*Game, error) {
 	return &Game{
 		rand:     rand.New(rand.NewSource(time.Now().UnixNano())),
 		state:    GameLoading,
+		size:     size,
+		colnb:    colnb,
+		rownb:    rownb,
 		skinView: skinView,
 		gridView: gridView,
 		audio:    audio,
@@ -65,8 +72,8 @@ func (g *Game) Run() error {
 		func(screen *ebiten.Image) error {
 			return g.update(screen)
 		},
-		1008,
-		546,
+		(g.colnb*g.size)+8,
+		(g.rownb*g.size)+46,
 		1,
 		"GoSnake",
 	) // scale is kept to 0.5, for good rendering in retina.
@@ -76,7 +83,7 @@ func (g *Game) update(screen *ebiten.Image) error {
 	switch g.state {
 	case GameLoading:
 		if spaceReleased() {
-			g.data = engine.NewData(50, 25)
+			g.data = engine.NewData(g.colnb, g.rownb)
 			if err := g.data.SetFruit(); err != nil {
 				return err
 			}
@@ -103,7 +110,7 @@ func (g *Game) update(screen *ebiten.Image) error {
 			case rightKeyPressed():
 				err = g.data.MoveEast()
 			default:
-				err = g.data.Move()
+				//err = g.data.Move()
 			}
 			if err != nil {
 				if err == engine.ErrColision {

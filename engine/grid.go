@@ -65,10 +65,9 @@ func (g *Grid) filterGridMap(m map[string]interface{}, segs []*Segment) {
 }
 
 func (g *Grid) filterSegment(m map[string]interface{}, seg *Segment) {
-	cur := *seg.end
-	pos := &cur
+	pos := copyPosition(seg.end)
 	for {
-		delete(m, cur.String())
+		delete(m, pos.String())
 		if equalPosition(pos, seg.start) {
 			return
 		}
@@ -126,12 +125,47 @@ func (g *Grid) getNextPosition(dir Direction, pos *Position) *Position {
 	return pos
 }
 
+func (g *Grid) getPreviousPosition(dir Direction, pos *Position) *Position {
+	switch dir {
+	case North:
+		if pos.y == (g.rowNb - 1) {
+			pos.y = 0
+		} else {
+			pos.y++
+		}
+	case South:
+		if pos.y == 0 {
+			pos.y = (g.rowNb - 1)
+		} else {
+			pos.y--
+		}
+	case West:
+		if pos.x == (g.colNb - 1) {
+			pos.x = 0
+		} else {
+			pos.x++
+		}
+	case East:
+		if pos.x == 0 {
+			pos.x = (g.colNb - 1)
+		} else {
+			pos.x--
+		}
+	}
+	return pos
+}
+
 func (g *Grid) translate(dir Direction, segs []*Segment, next *Position, chomp bool) []*Segment {
 	// Move Head
-	if dir == segs[0].dir {
+	samedir := dir == segs[0].dir
+	if samedir {
 		segs[0].start = next
 	} else {
-		segs = append([]*Segment{newSegment(dir, next, next)}, segs...)
+		segs = append([]*Segment{newSegment(dir, next, copyPosition(segs[0].start))}, segs...)
+	}
+
+	if !samedir {
+		segs[1].start = g.getPreviousPosition(segs[1].dir, segs[1].start)
 	}
 
 	// Move Tail
@@ -150,17 +184,12 @@ func (g *Grid) getBodyParts(segs []*Segment) []*BodyPart {
 	ret := []*BodyPart{}
 
 	for i := range segs {
-		pos := *segs[i].end
-		cur := &pos
+		cur := copyPosition(segs[i].end)
 	LoopSegment:
 		for {
 			switch {
-			case equalPosition(segs[i].start, cur):
-				if i == 0 { // Head
-					ret = append(ret, newBodyPart(getHeadImageType(segs[i].dir), *cur))
-				} else { // Body Straigth
-					ret = append(ret, newBodyPart(getBodyImageType(segs[i].dir), *cur))
-				}
+			case i == 0 && equalPosition(segs[i].start, cur):
+				ret = append(ret, newBodyPart(getHeadImageType(segs[i].dir), *cur))
 
 			case equalPosition(segs[i].end, cur):
 				if i == last { // Tail
@@ -185,6 +214,11 @@ func (g *Grid) getBodyParts(segs []*Segment) []*BodyPart {
 
 func equalPosition(a, b *Position) bool {
 	return a.x == b.x && a.y == b.y
+}
+
+func copyPosition(v *Position) *Position {
+	a := *v
+	return &a
 }
 
 func getPosition(k string) (*Position, error) {

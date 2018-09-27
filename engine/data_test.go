@@ -123,8 +123,8 @@ func TestDataMove2(t *testing.T) {
 		score: 10,
 		dir:   South,
 		body: []*Segment{
-			newSegment(South, NewPosition(0, 1), NewPosition(0, 1)),
-			newSegment(West, NewPosition(0, 0), NewPosition(1, 0)),
+			newSegment(South, NewPosition(0, 1), NewPosition(0, 0)),
+			newSegment(West, NewPosition(1, 0), NewPosition(1, 0)),
 			newSegment(North, NewPosition(1, 1), NewPosition(1, 1)),
 		},
 		fruit: nil,
@@ -161,8 +161,8 @@ func TestMoveNorth1(t *testing.T) {
 		score: 0,
 		dir:   North,
 		body: []*Segment{
-			newSegment(North, NewPosition(0, 1), NewPosition(0, 1)),
-			newSegment(West, NewPosition(0, 0), NewPosition(1, 0)),
+			newSegment(North, NewPosition(0, 1), NewPosition(0, 0)),
+			newSegment(West, NewPosition(1, 0), NewPosition(1, 0)),
 		},
 		grid: &Grid{colNb: 2, rowNb: 2},
 	}
@@ -191,8 +191,8 @@ func TestMoveNorth2(t *testing.T) {
 		score: 0,
 		dir:   South,
 		body: []*Segment{
-			newSegment(South, NewPosition(0, 1), NewPosition(0, 1)),
-			newSegment(West, NewPosition(0, 0), NewPosition(1, 0)),
+			newSegment(South, NewPosition(0, 1), NewPosition(0, 0)),
+			newSegment(West, NewPosition(1, 0), NewPosition(1, 0)),
 		},
 		grid: &Grid{colNb: 2, rowNb: 2},
 	}
@@ -221,8 +221,8 @@ func TestMoveWest1(t *testing.T) {
 		score: 0,
 		dir:   West,
 		body: []*Segment{
-			newSegment(West, NewPosition(0, 0), NewPosition(0, 0)),
-			newSegment(North, NewPosition(1, 0), NewPosition(1, 1)),
+			newSegment(West, NewPosition(0, 0), NewPosition(1, 0)),
+			newSegment(North, NewPosition(1, 1), NewPosition(1, 1)),
 		},
 		grid: &Grid{colNb: 2, rowNb: 2},
 	}
@@ -273,8 +273,8 @@ func TestMoveEast1(t *testing.T) {
 		score: 0,
 		dir:   North,
 		body: []*Segment{
-			newSegment(North, NewPosition(0, 0), NewPosition(0, 0)),
-			newSegment(West, NewPosition(0, 1), NewPosition(1, 1)),
+			newSegment(North, NewPosition(0, 0), NewPosition(0, 1)),
+			newSegment(West, NewPosition(1, 1), NewPosition(1, 1)),
 		},
 		grid: &Grid{colNb: 2, rowNb: 2},
 	}
@@ -282,9 +282,8 @@ func TestMoveEast1(t *testing.T) {
 		score: 0,
 		dir:   East,
 		body: []*Segment{
-			newSegment(East, NewPosition(1, 0), NewPosition(1, 0)),
-			newSegment(North, NewPosition(0, 0), NewPosition(0, 0)),
-			newSegment(West, NewPosition(0, 1), NewPosition(0, 1)),
+			newSegment(East, NewPosition(1, 0), NewPosition(0, 0)),
+			newSegment(North, NewPosition(0, 1), NewPosition(0, 1)),
 		},
 		grid: &Grid{colNb: 2, rowNb: 2},
 	}
@@ -373,8 +372,8 @@ func TestMoveSouth2(t *testing.T) {
 		score: 0,
 		dir:   South,
 		body: []*Segment{
-			newSegment(South, NewPosition(0, 1), NewPosition(0, 1)),
-			newSegment(West, NewPosition(0, 0), NewPosition(1, 0)),
+			newSegment(South, NewPosition(0, 1), NewPosition(0, 0)),
+			newSegment(West, NewPosition(1, 0), NewPosition(1, 0)),
 		},
 		grid: &Grid{colNb: 2, rowNb: 2},
 	}

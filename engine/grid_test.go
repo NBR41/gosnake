@@ -167,8 +167,8 @@ func TestMove3(t *testing.T) {
 		t.Errorf("unexpected error, %v", err)
 	} else {
 		exp := []*Segment{
-			newSegment(South, NewPosition(0, 1), NewPosition(0, 1)),
-			newSegment(West, NewPosition(0, 0), NewPosition(1, 0)),
+			newSegment(South, NewPosition(0, 1), NewPosition(0, 0)),
+			newSegment(West, NewPosition(1, 0), NewPosition(1, 0)),
 		}
 		if diff := pretty.Compare(exp, p); diff != "" {
 			t.Errorf("unexpected value\n%s", diff)
