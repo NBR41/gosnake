@@ -13,18 +13,18 @@ const (
 	sampleRate = 48000
 )
 
-type Audio struct {
+type audioReg struct {
 	ctx     *audio.Context
-	players *AudioPlayers
+	players *audioPlayers
 }
 
-type AudioPlayers struct {
+type audioPlayers struct {
 	Beginning *audio.Player
 	Chomp     *audio.Player
 	Death     *audio.Player
 }
 
-func NewAudio() (*Audio, error) {
+func newAudio() (*audioReg, error) {
 	audioCtx, err := audio.NewContext(sampleRate)
 	if err != nil {
 		return nil, err
@@ -50,9 +50,9 @@ func NewAudio() (*Audio, error) {
 		return nil, err
 	}
 
-	return &Audio{
+	return &audioReg{
 		ctx: audioCtx,
-		players: &AudioPlayers{
+		players: &audioPlayers{
 			Beginning: beginning,
 			Chomp:     chomp,
 			Death:     death,

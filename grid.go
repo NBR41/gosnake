@@ -15,14 +15,12 @@ import (
 )
 
 var (
-	GrayColor = color.RGBA{236, 240, 241, 255.0}
-
 	uTurnRadian     = math.Pi
 	rightTurnRadian = math.Pi / 2
 	leftTurnRadian  = -1 * math.Pi / 2
 )
 
-func GridView(
+func gridView(
 	size, colnb, rownb int, body *assets.Body, imgfruit *ebiten.Image, arcadeFont *truetype.Font,
 ) (fView, error) {
 	fontface := truetype.NewFace(arcadeFont, &truetype.Options{

@@ -35,12 +35,12 @@ func (d *Data) GetFruit() *Position {
 }
 
 //Move move snake in the current direction
-func (d *Data) Move() error {
+func (d *Data) Move() (bool, error) {
 	return d.move(d.Direction())
 }
 
 //MoveNorth move snake to the North if the current dir is not South
-func (d *Data) MoveNorth() error {
+func (d *Data) MoveNorth() (bool, error) {
 	if d.dir == South {
 		return d.Move()
 	}
@@ -48,7 +48,7 @@ func (d *Data) MoveNorth() error {
 }
 
 //MoveSouth move snake to the South if the current dir is not North
-func (d *Data) MoveSouth() error {
+func (d *Data) MoveSouth() (bool, error) {
 	if d.dir == North {
 		return d.Move()
 	}
@@ -56,7 +56,7 @@ func (d *Data) MoveSouth() error {
 }
 
 //MoveWest move snake to the West if the current dir is not East
-func (d *Data) MoveWest() error {
+func (d *Data) MoveWest() (bool, error) {
 	if d.dir == East {
 		return d.Move()
 	}
@@ -64,7 +64,7 @@ func (d *Data) MoveWest() error {
 }
 
 //MoveEast move snake to the East if the current dir is not West
-func (d *Data) MoveEast() error {
+func (d *Data) MoveEast() (bool, error) {
 	if d.dir == West {
 		return d.Move()
 	}
@@ -86,7 +86,7 @@ func (d *Data) GetBodyParts() []*BodyPart {
 	return d.grid.getBodyParts(d.body)
 }
 
-func (d *Data) move(dir Direction) error {
+func (d *Data) move(dir Direction) (bool, error) {
 	head := *d.body[0].start
 	next := d.grid.getNextPosition(dir, &head)
 
@@ -97,7 +97,7 @@ func (d *Data) move(dir Direction) error {
 
 	segs, err := d.grid.move(dir, d.body, next, chomp)
 	if err != nil {
-		return err
+		return chomp, err
 	}
 	if chomp {
 		d.score += 10
@@ -107,5 +107,5 @@ func (d *Data) move(dir Direction) error {
 	if chomp {
 		err = d.SetFruit()
 	}
-	return err
+	return chomp, err
 }

@@ -94,7 +94,7 @@ func TestDataMove1(t *testing.T) {
 			rowNb: 2,
 		},
 	}
-	err := d.Move()
+	_, err := d.Move()
 	if err == nil {
 		t.Error("expecting error")
 	} else {
@@ -134,7 +134,7 @@ func TestDataMove2(t *testing.T) {
 		},
 	}
 
-	err := d.Move()
+	_, err := d.Move()
 	if err == nil {
 		t.Error("expecting error")
 	} else {
@@ -167,7 +167,7 @@ func TestMoveNorth1(t *testing.T) {
 		grid: &Grid{colNb: 2, rowNb: 2},
 	}
 
-	err := d.MoveNorth()
+	_, err := d.MoveNorth()
 	if err != nil {
 		t.Errorf("unexpected error, %v", err)
 	} else {
@@ -197,7 +197,7 @@ func TestMoveNorth2(t *testing.T) {
 		grid: &Grid{colNb: 2, rowNb: 2},
 	}
 
-	err := d.MoveNorth()
+	_, err := d.MoveNorth()
 	if err != nil {
 		t.Errorf("unexpected error, %v", err)
 	} else {
@@ -227,7 +227,7 @@ func TestMoveWest1(t *testing.T) {
 		grid: &Grid{colNb: 2, rowNb: 2},
 	}
 
-	err := d.MoveWest()
+	_, err := d.MoveWest()
 	if err != nil {
 		t.Errorf("unexpected error, %v", err)
 	} else {
@@ -258,7 +258,7 @@ func TestMoveWest2(t *testing.T) {
 		grid: &Grid{colNb: 2, rowNb: 2},
 	}
 
-	err := d.MoveWest()
+	_, err := d.MoveWest()
 	if err != nil {
 		t.Errorf("unexpected error, %v", err)
 	} else {
@@ -287,7 +287,7 @@ func TestMoveEast1(t *testing.T) {
 		},
 		grid: &Grid{colNb: 2, rowNb: 2},
 	}
-	err := d.MoveEast()
+	_, err := d.MoveEast()
 	if err != nil {
 		t.Errorf("unexpected error, %v", err)
 	} else {
@@ -317,7 +317,7 @@ func TestMoveEast2(t *testing.T) {
 		},
 		grid: &Grid{colNb: 2, rowNb: 2},
 	}
-	err := d.MoveEast()
+	_, err := d.MoveEast()
 	if err != nil {
 		t.Errorf("unexpected error, %v", err)
 	} else {
@@ -348,7 +348,7 @@ func TestMoveSouth1(t *testing.T) {
 		grid: &Grid{colNb: 2, rowNb: 2},
 	}
 
-	err := d.MoveSouth()
+	_, err := d.MoveSouth()
 	if err != nil {
 		t.Errorf("unexpected error, %v", err)
 	} else {
@@ -378,7 +378,7 @@ func TestMoveSouth2(t *testing.T) {
 		grid: &Grid{colNb: 2, rowNb: 2},
 	}
 
-	err := d.MoveSouth()
+	_, err := d.MoveSouth()
 	if err != nil {
 		t.Errorf("unexpected error, %v", err)
 	} else {

@@ -4,19 +4,18 @@ import (
 	"image/color"
 	"strconv"
 
-	"github.com/golang/freetype/truetype"
-	"golang.org/x/image/font"
-
-	//"github.com/NBR41/gosnake/assets"
 	"github.com/NBR41/gosnake/engine"
+	"github.com/golang/freetype/truetype"
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/text"
-	//"github.com/skatiyar/pacman/spritetools"
+
+	"golang.org/x/image/font"
 )
 
+//MaxScoreView maximum score
 const MaxScoreView = 999999999
 
-func SkinView(skin *ebiten.Image, arcadeFont *truetype.Font) (fView, error) {
+func skinView(skin *ebiten.Image, arcadeFont *truetype.Font) (fView, error) {
 	fontface := truetype.NewFace(arcadeFont, &truetype.Options{
 		Size:    30,
 		DPI:     72,
