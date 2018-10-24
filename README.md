@@ -6,7 +6,7 @@ The snake game with golang implementation
 
 ## Purpose
 
-Inspired by the [https://github.com/skatiyar/pacman] (https://github.com/skatiyar/pacman).
+Inspired by the [https://github.com/skatiyar/pacman](https://github.com/skatiyar/pacman).
 This is the snake game with golang implementation.
 It use the library [Hajimehoshi](https://github.com/hajimehoshi) for the render.
 
@@ -21,9 +21,9 @@ $ ./gosnake
 
 ## Requirement
 
-See [https://github.com/hajimehoshi/ebiten#platforms] (https://github.com/hajimehoshi/ebiten#platforms) for the requirements considering your OS.
+See [https://github.com/hajimehoshi/ebiten#platforms](https://github.com/hajimehoshi/ebiten#platforms) for the requirements considering your OS.
 
 
 ## Thanks to
-- [skatiyar] (https://github.com/skatiyar/pacman) for inspiration.
+- [skatiyar](https://github.com/skatiyar/pacman) for inspiration.
 - [Hajimehoshi](https://github.com/hajimehoshi) for Ebiten 2D engine.
