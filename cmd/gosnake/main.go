@@ -4,8 +4,14 @@ import (
 	"github.com/NBR41/gosnake"
 )
 
+const (
+	size = 20
+	col  = 20
+	row  = 10
+)
+
 func main() {
-	game, err := gosnake.NewGame(20, 20, 10)
+	game, err := gosnake.NewGame(size, col, row)
 	if err != nil {
 		panic(err)
 	}
